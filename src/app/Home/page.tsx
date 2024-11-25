@@ -1,9 +1,8 @@
-'use client';
-import { FiSearch } from 'react-icons/fi'; 
-import Navbar from "../components/navbar"
-import Hero from '../components/hero';
-import Product from '../components/productCard';
-
+"use client";
+import { FiSearch } from "react-icons/fi";
+import Navbar from "../components/navbar";
+import Hero from "../components/hero";
+import Product from "../components/productCard";
 
 const Home = () => {
   return (

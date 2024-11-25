@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import {
   FiHome,
@@ -34,54 +35,90 @@ const Navbar = () => {
         </button>
 
         {/* Sidebar Content */}
-        <h2 className="text-center text-xl font-semibold text-[#545f70] mb-6">
-          Navigation
-        </h2>
+        <div className="w-full flex justify-center items-center py-5">
+            <div className="profile_photo bg-blue-600 min-h-8 min-w-8 h-[15vh] w-[15vh] rounded-full"></div>
+        </div>
         <div className="space-y-4">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiHome className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">Home</span>
+            <Link href={"/"} className="text-[#545f70] text-lg">
+              Home
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiBook className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">News</span>
+            <Link href={"/news"} className="text-[#545f70] text-lg">
+              News
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiUser className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">Profile</span>
+            <Link href={"/profile"} className="text-[#545f70] text-lg">
+              Profile
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiShoppingCart className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">My Cart</span>
+            <Link href={"/myCart"} className="text-[#545f70] text-lg">
+              My Cart
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiClipboard className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">Order & History</span>
+            <Link href={"/orderAndHistory"} className="text-[#545f70] text-lg">
+              Order & History
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiLock className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">Privacy Policy</span>
+            <Link href={"/privacyPolicy"} className="text-[#545f70] text-lg">
+              Privacy Policy
+            </Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 h-11">
             <FiHelpCircle className="text-[#545f70]" size={22} />
-            <span className="text-[#545f70] text-lg">Support</span>
+            <Link href={"/support"} className="text-[#545f70] text-lg">
+              Support
+            </Link>
           </div>
         </div>
       </aside>
 
       {/* Top Navbar */}
       <div className="flex justify-between items-center px-4">
-        <button onClick={toggleSidebar} className="text-[#545f70] text-3xl">
-          &#9776; {/* Hamburger icon */}
-        </button>
+        <div className="logo h-9 w-9 bg-black rounded-md"></div>
 
         {/* Centered Title */}
-        <h1 className="flex-1 text-center text-[#545f70] text-2xl font-semibold">
-          Home
-        </h1>
+        <div className="md:flex items-center px-4 hidden md:relative w-fit gap-10">
+          <Link
+            href={"/"}
+            className="text-center text-[#545f70] text-2xl font-semibold w-fit p-3"
+          >
+            Home
+          </Link>
+          <Link
+            href={"/news"}
+            className="w-fit p-3 text-center text-[#545f70] text-2xl font-semibold"
+          >
+            News
+          </Link>
+          <Link
+            href={"/profile"}
+            className="w-fit p-3 text-center text-[#545f70] text-2xl font-semibold"
+          >
+            Profile
+          </Link>
+        </div>
+
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden text-[#545f70] text-3xl"
+        >
+          &#9776; {/* Hamburger icon */}
+        </button>
       </div>
     </div>
   );
-}
+};
 
-export default Navbar
+export default Navbar;
