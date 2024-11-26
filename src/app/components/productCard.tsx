@@ -9,7 +9,7 @@ const Product = () => {
         {[...Array(4)].map((_, index) => (
           <Card
             key={index}
-            className="w-full p-6 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+            className="w-full p-6 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
           >
             <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
               <Avatar size="lg" />
