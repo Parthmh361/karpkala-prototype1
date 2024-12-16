@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 import {
@@ -11,7 +12,11 @@ import {
   FiX,
 } from "react-icons/fi";
 
-const Navbar = () => {
+interface navbarProps {
+  pageHeading: string;
+}
+
+const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Toggle sidebar open/close
@@ -36,7 +41,7 @@ const Navbar = () => {
 
         {/* Sidebar Content */}
         <div className="w-full flex justify-center items-center py-5">
-            <div className="profile_photo bg-blue-600 min-h-8 min-w-8 h-[15vh] w-[15vh] rounded-full"></div>
+          <div className="profile_photo bg-blue-600 min-h-8 min-w-8 h-[15vh] w-[15vh] rounded-full"></div>
         </div>
         <div className="space-y-4">
           <div className="flex items-center space-x-3 h-11">
@@ -108,6 +113,10 @@ const Navbar = () => {
           >
             Profile
           </Link>
+        </div>
+
+        <div className="md:hidden text-black font-semibold text-xl">
+          {pageHeading}
         </div>
 
         <button

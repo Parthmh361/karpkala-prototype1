@@ -9,7 +9,7 @@ const Home = () => {
     <div className="flex w-full h-screen bg-gray-50 overflow-hidden">
       {/* Main Content */}
       <div className="flex-1 overflow-auto p-6">
-        <Navbar />
+        <Navbar pageHeading="Home" />
         <Hero />
 
         {/* Search Bar with Search Icon */}
