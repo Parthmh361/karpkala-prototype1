@@ -14,7 +14,7 @@ const Hero = () => {
       <div>
         {/* Hero Section */}
         <div className="w-full h-[250px] bg-gradient-to-r from-[#318CE7] to-[#3A8DFF] text-white rounded-xl flex items-center justify-center mt-8">
-          <h2 className="text-3xl font-bold">Karp Kala</h2>
+          <h2 className="text-3xl font-bold">KARP KALA</h2>
         </div>
 
         {/* Progress Indicator (Slideshow) */}

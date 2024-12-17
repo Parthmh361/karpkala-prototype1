@@ -22,7 +22,7 @@ const Home = () => {
           <FiSearch className="text-[#545f70]" size={22} />
         </div>
 
-        <Product />
+        <Product grids={3} />
       </div>
     </div>
   );

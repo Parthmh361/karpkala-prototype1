@@ -24,7 +24,7 @@ const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
-    <div>
+    <div className=" sticky top-5 w-full">
       {/* Sidebar */}
       <aside
         className={`fixed top-0 right-0 h-full bg-white shadow-xl p-6 transition-transform duration-300 transform ${
