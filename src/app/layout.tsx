@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Home from "./pages/Home";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const geistSans = localFont({
@@ -31,7 +30,6 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Home />
           {children}
         </body>
       </UserProvider>
