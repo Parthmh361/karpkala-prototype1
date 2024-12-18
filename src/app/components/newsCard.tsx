@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Avatar } from "@nextui-org/react";
+import { Card, Button } from "@nextui-org/react";
 import { FaRegEye } from "react-icons/fa";
 
 const NewsCard = () => {

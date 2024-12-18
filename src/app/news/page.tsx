@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
 import NewsCard from "../components/newsCard";
-import VideoCarousel from "../components/videoCarousel";
 import Hero from "../components/hero";
 
 const News = () => {
