@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import {
   FiHome,
   FiBook,
@@ -16,16 +17,21 @@ interface navbarProps {
   pageHeading: string;
 }
 
+
 const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [login, isLogin] = useState(false)
+  const { user, error, isLoading } = useUser();
+  console.log(user?.picture);
+
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>{error.message}</div>;
 
   // Toggle sidebar open/close
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
-    <div className=" sticky top-5 w-full">
+    <div className=" sticky top-0 w-full z-50">
       {/* Sidebar */}
       <aside
         className={`fixed top-0 right-0 h-full bg-white shadow-xl p-6 transition-transform duration-300 transform ${
@@ -42,7 +48,9 @@ const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
 
         {/* Sidebar Content */}
         <div className="w-full flex justify-center items-center py-5">
-          <div className="profile_photo bg-blue-600 min-h-8 min-w-8 h-[15vh] w-[15vh] rounded-full"></div>
+          <div className="profile_photo bg-blue-600 min-h-8 min-w-8 h-[15vh] w-[15vh] rounded-full">
+            {user ? (<img src={user?.picture ?? ""} />) : ""}
+          </div>
         </div>
         <div className="space-y-4">
           <div className="flex items-center space-x-3 h-11">
@@ -76,50 +84,76 @@ const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
             </Link>
           </div>
           <div className="flex items-center space-x-3 h-11">
-            <FiLock className="text-[#545f70]" size={22} />
+            <FiHelpCircle className="text-[#545f70]" size={22} />
             <Link href={"/privacyPolicy"} className="text-[#545f70] text-lg">
-              Privacy Policy
+              Support
             </Link>
           </div>
           <div className="flex items-center space-x-3 h-11">
-            <FiHelpCircle className="text-[#545f70]" size={22} />
-            <Link href={"/support"} className="text-[#545f70] text-lg">
-              Support
-            </Link>
+            {user ? (
+              <>
+                <FiHelpCircle className="text-[#545f70]" size={22} />
+                <Link
+                  href={"/api/auth/logout"}
+                  className="text-[#545f70] text-lg"
+                >
+                  Logout
+                </Link>
+              </>
+            ) : (
+              <>
+                <FiHelpCircle className="text-[#545f70]" size={22} />
+                <Link
+                  href={"/api/auth/login"}
+                  className="text-[#545f70] text-lg"
+                >
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </aside>
 
       {/* Top Navbar */}
-      <div className="flex justify-between items-center px-4">
-        <div className="logo h-9 w-9 bg-black rounded-md"></div>
+      <div className="flex justify-between items-center px-4 py-2 bg-black">
+        <div className="logo h-9 w-9 bg-white rounded-md"></div>
 
         {/* Centered Title */}
         <div className="md:flex items-center px-4 hidden md:relative w-fit gap-10">
           <Link
             href={"/"}
-            className="text-center text-[#545f70] text-2xl font-semibold w-fit p-3"
+            className="text-center text-white text-2xl font-semibold w-fit p-3"
           >
             Home
           </Link>
           <Link
             href={"/news"}
-            className="w-fit p-3 text-center text-[#545f70] text-2xl font-semibold"
+            className="w-fit p-3 text-center text-white text-2xl font-semibold"
           >
             News
           </Link>
           <Link
             href={"/profile"}
-            className="w-fit p-3 text-center text-[#545f70] text-2xl font-semibold"
+            className="w-fit p-3 text-center text-white text-2xl font-semibold"
           >
             Profile
           </Link>
-          <Link
-            href={"/api/auth/login"}
-            className="w-fit p-3 text-center text-[#545f70] text-2xl font-semibold"
-          >
-            Login
-          </Link>
+
+          {user ? (
+            <>
+              <div className="w-14 h-14 rounded-full bg-black overflow-hidden">
+                <img src={user?.picture ?? ""} alt="" />
+              </div>
+            </>
+          ) : (
+            <Link
+              href={"/api/auth/login"}
+              className="w-fit p-3 text-center text-white text-2xl font-semibold"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         <div className="md:hidden text-black font-semibold text-xl">
