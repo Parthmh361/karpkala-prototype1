@@ -1,18 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import FarmerForm from "../components/FarmerForm";
 import BuyerForm from "../components/BuyerForm";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import Home from "../Home/page";
 
-export default function Fome() {
-
+export default function Form() {
   const { user, error, isLoading } = useUser();
   const [userType, setUserType] = useState<"farmer" | "buyer" | null>(null);
-  // const [isUsernameUnique, setIsUsernameUnique] = useState(true);
   const [formData, setFormData] = useState({
-    email:"" ,
+    email: "",
     username: "",
     name: "",
     contactInfo: "",
@@ -23,51 +21,19 @@ export default function Fome() {
     cottonToBuy: "",
   });
 
+  // Use `useRouter` here to get the router object
+  const router = useRouter();
+
+  // Use useEffect to update formData when user data changes
   useEffect(() => {
-    // Optionally pre-fill user data if available
     if (user) {
-      setFormData({
-        ...formData,
+      setFormData((prevState) => ({
+        ...prevState,
         email: user.email ? user.email : "",
         username: user.name ? user.name : "",
-      });
+      }));
     }
-  }, [user]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(
-          `/api/singleUser?username=${formData.username}`
-        );
-        const data = await response.json();
-        if (data) {
-          // Check for required properties before setting showHome
-          if (
-            data.email &&
-            data.name &&
-            (data.typeOfCotton || data.cottonToBuy) &&
-            (data.occupation === "farmer" || data.occupation === "buyer") &&
-            data.yearsInFarming &&
-            data.address
-          ) {
-            <Home />
-          } else {
-            // Handle cases where data is incomplete
-            console.warn("Incomplete user data for Home:", data);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    if (formData.username) {
-      fetchUser();
-    }
-  }, [formData.username]);
-
-
+  }, [user]); // Only runs when `user` changes
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -79,23 +45,26 @@ export default function Fome() {
     }));
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3000/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    if (response.ok) {
-      alert("Form submitted successfully!");
-    } else {
-      alert("Failed to submit form.");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Form submitted successfully!");
+        router.push("/Home"); // Redirect to the '/Home' page
+      } else {
+        alert("Failed to submit form.");
+      }
+    } catch (error) {
+      console.log(error);
+      // Handle the error appropriately (e.g., display an error message to the user)
     }
-
-
-    console.log("Form submitted:", formData);
-    alert("Form submitted successfully!");
   };
 
   return (
@@ -157,6 +126,23 @@ export default function Fome() {
                       id="name"
                       name="name"
                       value={formData.name}
+                      onChange={handleChange}
+                      className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.email}
                       onChange={handleChange}
                       className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       required
