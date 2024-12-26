@@ -187,97 +187,104 @@ const Profile: React.FC = () => {
             </div>
 
             {showForm && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-                onClick={() => setShowForm(false)}
-              >
-                <div
-                  className="bg-white rounded-lg p-6 w-full max-w-lg md:max-w-xl lg:max-w-2xl shadow-lg relative"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <h2 className="text-xl font-bold mb-4">{editingProductId ? "Edit Product" : "Add New Product"}</h2>
-                  <form onSubmit={handleFormSubmit}>
-                    <div className="mb-4">
-                      <label className="block mb-2">Product Name</label>
-                      <input
-                        type="text"
-                        name="productName"
-                        value={formData.productName}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Description</label>
-                      <textarea
-                        name="productDescription"
-                        value={formData.productDescription}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Price</label>
-                      <input
-                        type="number"
-                        name="productPrice"
-                        value={formData.productPrice}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Image URL</label>
-                      <input
-                        type="text"
-                        name="productImage"
-                        value={formData.productImage}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Category</label>
-                      <input
-                        type="text"
-                        name="productCategory"
-                        value={formData.productCategory}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Quantity</label>
-                      <input
-                        type="number"
-                        name="productQuantity"
-                        value={formData.productQuantity}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        required
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block mb-2">Rating</label>
-                      <input
-                        type="number"
-                        name="productRating"
-                        value={formData.productRating}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded"
-                        required
-                      />
-                    </div>
-                    <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
-                      Submit
-                    </button>
-                  </form>
-                </div>
-              </div>
-            )}
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    onClick={() => setShowForm(false)}
+  >
+    <div
+      className="bg-white rounded-lg p-6 w-full max-w-lg md:max-w-xl lg:max-w-2xl shadow-lg relative overflow-auto max-h-screen"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => setShowForm(false)}
+        className="absolute top-2 right-2 text-white bg-red-600 p-2 rounded-full hover:bg-red-700 transition"
+      >
+        &times;
+      </button>
+      <h2 className="text-xl font-bold mb-4">{editingProductId ? "Edit Product" : "Add New Product"}</h2>
+      <form onSubmit={handleFormSubmit}>
+        <div className="mb-4">
+          <label className="block mb-2">Product Name</label>
+          <input
+            type="text"
+            name="productName"
+            value={formData.productName}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Description</label>
+          <textarea
+            name="productDescription"
+            value={formData.productDescription}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Price</label>
+          <input
+            type="number"
+            name="productPrice"
+            value={formData.productPrice}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Image URL</label>
+          <input
+            type="text"
+            name="productImage"
+            value={formData.productImage}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Category</label>
+          <input
+            type="text"
+            name="productCategory"
+            value={formData.productCategory}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Quantity</label>
+          <input
+            type="number"
+            name="productQuantity"
+            value={formData.productQuantity}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Rating</label>
+          <input
+            type="number"
+            name="productRating"
+            value={formData.productRating}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
 
             <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8`}>
               {products.length === 0 ? (
