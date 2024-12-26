@@ -9,32 +9,33 @@ import Form from "./form/page";
 export default function main() {
   const { user, error, isLoading } = useUser();
   const [isForm, setIsForm] = useState(false);
-  const username = user?.name;
 
   useEffect(() => {
     // if(user && username){
     //   setIsForm(false)
     // }
     const fetchUser = async () => {
-      const response = await fetch(`/api/singleUser?username=${username}`);
+      const usermail = user?.email;
+      const response = await fetch(`/api/singleUser?email=${usermail}`);
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        // Check for required properties before setting showHome
-        if (!data.email || !data.name || !data.address) {
-          setIsForm(true);
-        } else {
-          // Handle cases where data is incomplete
-          console.warn("Incomplete user data for Home:", data);
-        }
-      } else {
         setIsForm(false);
+        // // Check for required properties before setting showHome
+        // if (!data.email || !data.name || !data.address) {
+        //   setIsForm(true);
+        // } else {
+        //   // Handle cases where data is incomplete
+        //   console.warn("Incomplete user data for Home:", data);
+        // }
+      } else {
+        setIsForm(true);
       }
     };
 
     if (user) {
       fetchUser();
     }
-  }, [username]);
+  }, [user]); //[usermail]
   return <>{isForm ? <Form /> : <Home />}</>;
 }

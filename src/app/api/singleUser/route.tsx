@@ -7,11 +7,11 @@ import mongoose from "mongoose";
 export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
-    const username = searchParams.get("username");
+    const email = searchParams.get("email");
   
-    if (!username || !Types.ObjectId.isValid(username)) {
+    if (!email || !Types.ObjectId.isValid(email)) {
       return new NextResponse(
-        JSON.stringify({ message: "Entered user ID is not valid" }),
+        JSON.stringify({ message: "Entered email is not valid" }),
         { status: 400 }
       );
     }
@@ -19,7 +19,7 @@ export const GET = async (request: Request) => {
     await connect();
   
     const user = User.findOne({
-      username: username,
+      email: email,
     })
   
     if(!user){

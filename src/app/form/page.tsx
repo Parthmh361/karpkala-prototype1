@@ -9,6 +9,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 export default function Form() {
   const { user, error, isLoading } = useUser();
   const [userType, setUserType] = useState<"farmer" | "buyer" | null>(null);
+  const [isUsernameUnique, setIsUsernameUnique] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -24,13 +25,21 @@ export default function Form() {
   // Use `useRouter` here to get the router object
   const router = useRouter();
 
+  //
+  const checkUsername = async (username: string) => {
+    const response = await fetch(`/api/singleUser?username=${username}`);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (response.ok) {
+      setIsUsernameUnique(false);
+    }
+  };
+
   // Use useEffect to update formData when user data changes
   useEffect(() => {
     if (user) {
       setFormData((prevState) => ({
         ...prevState,
         email: user.email ? user.email : "",
-        username: user.name ? user.name : "",
       }));
     }
   }, [user]); // Only runs when `user` changes
@@ -47,6 +56,10 @@ export default function Form() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isUsernameUnique) {
+      alert("Please choose a unique username");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3000/api/users", {
@@ -109,7 +122,10 @@ export default function Form() {
                       id="username"
                       name="username"
                       value={formData.username}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange;
+                        checkUsername(e.target.value);
+                      }}
                       className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       required
                     />
@@ -140,8 +156,8 @@ export default function Form() {
                     </label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
+                      id="email"
+                      name="email"
                       value={formData.email}
                       onChange={handleChange}
                       className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
