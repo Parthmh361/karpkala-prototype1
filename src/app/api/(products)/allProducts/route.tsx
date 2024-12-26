@@ -1,10 +1,6 @@
 import connect from "@/LIB/db";
-import User from "@/LIB/modals/user";
-import { Types } from "mongoose";
-import { NextResponse } from "next/server";
 import Product from "@/LIB/modals/product";
-
-const ObjectId = require("mongoose").Types.ObjectId;
+import { NextResponse } from "next/server";
 
 export const GET = async (request: Request) => {
   try {
@@ -15,33 +11,21 @@ export const GET = async (request: Request) => {
 
     await connect();
 
-    // let allProduct: any = await Product.find();
-
-    const filter: any = {
-      // user: new Types.ObjectId(userId),
-      // category: new Types.ObjectId(categoryId),
-    };
+    const filter: any = {};
 
     if (searchKeywords) {
-      // allProduct = await Product.aggregate([
-      //   {
-      //     $match: {
-            filter.$or= [
-              {
-                productName: { $regex: searchKeywords, $options: "i" },
-              },
-              {
-                productDescription: { $regex: searchKeywords, $options: "i" },
-              },
-              {
-                productCategory: { $regex: searchKeywords, $options: "i" },
-              },
-            ];
-      //     },
-      //   },
-      // ]);
+      filter.$or = [
+        {
+          productName: { $regex: searchKeywords, $options: "i" },
+        },
+        {
+          productDescription: { $regex: searchKeywords, $options: "i" },
+        },
+        {
+          productCategory: { $regex: searchKeywords, $options: "i" },
+        },
+      ];
     }
-
 
     if (startDate && endDate) {
       filter.createdAt = {
@@ -58,18 +42,18 @@ export const GET = async (request: Request) => {
       };
     }
 
-    const product = await Product.find(filter);
-    
-    if (!product) {
-      return new NextResponse(JSON.stringify({ message: "No product found" }), {
+    const products = await Product.find(filter);
+
+    if (!products) {
+      return new NextResponse(JSON.stringify({ message: "No products found" }), {
         status: 404,
       });
     }
 
-    return new NextResponse(JSON.stringify(product), { status: 200 });
+    return new NextResponse(JSON.stringify(products), { status: 200 });
   } catch (error: any) {
     return new NextResponse(
-      JSON.stringify({ message: "Error in fetching products" } + error.message),
+      JSON.stringify({ message: "Error fetching products: " + error.message }),
       { status: 500 }
     );
   }

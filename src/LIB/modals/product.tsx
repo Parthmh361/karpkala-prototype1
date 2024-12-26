@@ -17,5 +17,6 @@ const ProductSchema = new Schema(
   }
 );
 
-const Product = model("Product", ProductSchema);
+// Use existing model or create a new one
+const Product = models.Product || model("Product", ProductSchema);
 export default Product;
