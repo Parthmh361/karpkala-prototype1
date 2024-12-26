@@ -73,7 +73,7 @@ const Navbar: React.FC<navbarProps> = ({ pageHeading }) => {
           </div>
           <div className="flex items-center space-x-3 h-11">
             <FiShoppingCart className="text-[#545f70]" size={22} />
-            <Link href={"/myCart"} className="text-[#545f70] text-lg">
+            <Link href={"/cart"} className="text-[#545f70] text-lg">
               My Cart
             </Link>
           </div>

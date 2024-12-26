@@ -21,7 +21,6 @@ const Home = () => {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -32,7 +31,6 @@ const Home = () => {
         }
         const data = await response.json();
         setProducts(data);
-        setFilteredProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -43,30 +41,39 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-
-    const filtered = products.filter((product) =>
-      product.productName.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      product.productDescription.toLowerCase().includes(e.target.value.toLowerCase()) ||
-      product.productCategory.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredProducts(filtered);
   };
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  const handleAddToCart = async (productId: string) => {
+    const userId = "676c32de895813f55307c58f"; // Replace with the actual user ID from the session or auth
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        body: JSON.stringify({
+          userId,
+          productId,
+          quantity: 1, // Default quantity, can be adjusted
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add product to cart");
+      }
+      alert("Product added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
 
   return (
     <>
       <Navbar pageHeading="Home" />
       <div className="flex w-full h-screen bg-gray-50 overflow-hidden">
-        {/* Main Content */}
         <div className="flex-1 overflow-auto p-6">
           <Hero />
-
-          {/* Search Bar with Search Icon */}
           <div className="flex items-center space-x-4 mt-6 bg-white border border-[#545f70] rounded-lg px-6 py-3 shadow-md">
             <input
               type="text"
@@ -78,16 +85,9 @@ const Home = () => {
             <FiSearch className="text-[#545f70]" size={22} />
           </div>
 
-          {/* No products available message */}
-          {filteredProducts.length === 0 && searchTerm && (
-            <div className="mt-4 text-center text-[#545f70] font-semibold">
-              No products available
-            </div>
-          )}
-
-          {/* Product Cards */}
-          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8`}>
-            {filteredProducts.map((product) => (
+          {products
+            .filter((product) => product.productName.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map((product) => (
               <Card
                 key={product._id}
                 className="w-full md:min-w-[300px] p-5 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
@@ -110,19 +110,19 @@ const Home = () => {
                     </div>
                     <div className="text-[#545f70] mt-2">{product.productDescription}</div>
                     <div className="text-[#545f70] font-semibold mt-2 text-xl">
-                      ${product.productPrice.toFixed(2)}
+                      <span>&#8377;</span> {product.productPrice.toFixed(2)}
                     </div>
                   </div>
                 </div>
                 <Button
                   color="primary"
                   className="w-full mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
+                  onClick={() => handleAddToCart(product._id)}
                 >
                   Add to Cart
                 </Button>
               </Card>
             ))}
-          </div>
         </div>
       </div>
     </>
