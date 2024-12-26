@@ -2,8 +2,10 @@ import connect from "@/LIB/db";
 import User from "@/LIB/modals/user";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
+// import { ObjectId } from "mongoose";
 
-const ObjectId = require("mongoose").Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 
 export const GET = async () => {
   try {
