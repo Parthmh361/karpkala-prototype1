@@ -62,7 +62,7 @@ export default function Form() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/users", {
+      const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -123,7 +123,7 @@ export default function Form() {
                       name="username"
                       value={formData.username}
                       onChange={(e) => {
-                        handleChange;
+                        handleChange(e);
                         checkUsername(e.target.value);
                       }}
                       className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
