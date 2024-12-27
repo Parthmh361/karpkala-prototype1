@@ -42,7 +42,7 @@ export const PATCH = async (request: Request) => {
     const body = await request.json();
     const { userId, newName } = body;
 
-    await connect;
+    await connect();
 
     if (!userId || !newName) {
       return new NextResponse(

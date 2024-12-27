@@ -155,7 +155,7 @@ export default function Form() {
                       Email
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       id="email"
                       name="email"
                       value={formData.email}
