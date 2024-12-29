@@ -31,6 +31,7 @@ export default function Form() {
     if (response.ok) {
       setIsUsernameUnique(false);
     }
+    else setIsUsernameUnique(true)
   };
 
   // Use useEffect to update formData when user data changes
