@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = "mongodb+srv://parthchoudhari3612:qsefthikp@cluster0.ccucqrl.mongodb.net//?retryWrites=true&w=majority";
+const MONGODB_URI =
+  "mongodb+srv://parthchoudhari3612:qsefthikp@cluster0.ccucqrl.mongodb.net//?retryWrites=true&w=majority";
 
 const connect = async () => {
   if (mongoose.connection.readyState >= 1) {

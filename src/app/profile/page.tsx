@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`/api/userProducts?userId=676c32de895813f55307c58f`);
+      const response = await fetch(`/api/userProducts?userId=676fd86ecc391e12861a89c0`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
     if (editingProductId) {
       // If we're editing a product, use PATCH
       try {
-        const response = await fetch(`/api/userProducts/${editingProductId}?userId=676c32de895813f55307c58f`, {
+        const response = await fetch(`/api/userProducts/${editingProductId}?userId=676fd86ecc391e12861a89c0`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const Profile: React.FC = () => {
     } else {
       // If it's a new product, use POST (same as before)
       try {
-        const response = await fetch(`/api/userProducts?userId=676c32de895813f55307c58f`, {
+        const response = await fetch(`/api/userProducts?userId=676fd86ecc391e12861a89c0`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +136,7 @@ const Profile: React.FC = () => {
 
   const handleDelete = async (productId: string) => {
     try {
-      const response = await fetch(`/api/userProducts/${productId}?userId=676c32de895813f55307c58f`, {
+      const response = await fetch(`/api/userProducts/${productId}?userId=676fd86ecc391e12861a89c0`, {
         method: "DELETE",
       });
 
