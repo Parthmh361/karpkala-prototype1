@@ -26,7 +26,7 @@ const Hero = () => {
     <div>
       {/* Hero Section */}
       <div
-        className="w-full h-[250px] text-white rounded-xl flex items-center justify-center mt-8 transition-all duration-500 ease-in-out relative overflow-hidden"
+        className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[350px] text-white rounded-xl flex flex-col items-center justify-center mt-8 transition-all duration-500 ease-in-out relative overflow-hidden px-4 text-center"
         style={{
           background: `linear-gradient(135deg, #A2F5AC, #3A8DFF, #318CE7, #FFFFFF)`, // Blue and Green swapped
           animation: "gradientAnimation 6s ease infinite",
@@ -38,8 +38,8 @@ const Hero = () => {
           style={{ zIndex: -1 }}
         />
 
-        <h2 className="text-3xl font-bold z-10">
-          {[
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold z-10">
+          {[  
             "Welcome to KARP KALA",
             "Explore Creativity",
             "Innovation at Its Best",
@@ -54,7 +54,7 @@ const Hero = () => {
           <div
             key={idx}
             onClick={() => goToSlide(idx)}
-            className={`w-10 h-2 transition-all duration-300 ${
+            className={`w-6 h-2 sm:w-8 md:w-10 transition-all duration-300 ${
               slideIndex === idx ? "bg-[#318CE7]" : "bg-[#d3d3d3]"
             } rounded-md`}
           />

@@ -1,48 +1,3 @@
-// "use client";
-
-// import React from "react";
-// import Home from "./Home/page";
-// import { useState, useEffect } from "react";
-// import { useUser } from "@auth0/nextjs-auth0/client";
-// import Form from "./form/page";
-
-// export default function main() {
-//   const { user, error, isLoading } = useUser();
-//   const [isForm, setIsForm] = useState(false);
-
-//   useEffect(() => {
-//     // if(user && username){
-//     //   setIsForm(false)
-//     // }
-//     const fetchUser = async () => {
-//       const usermail = user?.email;
-
-//       const response = await fetch(`/api/singleUser?email=${usermail}`);
-//       const data = await response.json();
-//       console.log(data);
-//       if (response.ok) {
-//         setIsForm(false);
-//         // Check for required properties before setting showHome
-//       //   if (!data.email || !data.name || !data.address) {
-//       //     setIsForm(true);
-//       //   } else {
-//       //     // Handle cases where data is incomplete
-//       //     console.warn("Incomplete user data for Home:", data);
-//       //   }
-//       // } else {
-//       //   setIsForm(true);
-//       // }
-//     };
-
-//     if (user) {
-//       fetchUser();
-//     }
-//   }, [user]); //[usermail]
-//   return <>{isForm ? <Form /> : <Home />}</>;
-// }
-
-
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -94,8 +49,15 @@ export default function Main() {
   }, [user]); // The effect runs whenever `user` changes
 
   if (isLoading || loading) {
-    return <div>Loading...</div>; // Show loading state if user data is being fetched
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg text-gray-600">Welcome to Karpkala Loading ....</p>
+        </div>
+      </div>
+    );
   }
-
+  
   return <>{isForm ? <Form /> : <Home />}</>;
 }

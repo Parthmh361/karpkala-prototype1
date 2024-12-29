@@ -16,12 +16,9 @@ export async function POST(req: Request) {
 
   try {
     await connect();
-    
+
     // Check if the product already exists in the user's cart
-    const existingCartItem = await Cart.findOne({
-      userId,
-      productId,
-    });
+    const existingCartItem = await Cart.findOne({ userId, productId });
 
     if (existingCartItem) {
       // If the item exists, update the quantity
@@ -38,50 +35,50 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "Product added to cart" });
-  } catch (error:any) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 // GET method: Fetch all cart items for a user
 export const GET = async (req: Request) => {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-  
-    if (!userId) {
-      return NextResponse.json({ error: "UserId is required" }, { status: 400 });
-    }
-  
-    try {
-      await connect();
-  
-      // Fetch all cart items for the user
-      const cartItems = await Cart.find({ userId });
-  
-      // Get product details for each cart item
-      const productIds = cartItems.map(item => item.productId);
-      const products = await Product.find({ _id: { $in: productIds } });
-  
-      // Merge cart data with product data
-      const cartWithProductDetails = cartItems.map(item => {
-        const product = products.find(p => p._id.toString() === item.productId.toString());
-        if (product) {
-          return {
-            ...item.toObject(),
-            productName: product.productName,
-            productDescription: product.productDescription,
-            productPrice: product.productPrice,
-            productImage: product.productImage,
-          };
-        }
-        return item; // If no product found, return the cart item as is
-      });
-  
-      return NextResponse.json(cartWithProductDetails);
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-  };
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
+
+  if (!userId) {
+    return NextResponse.json({ error: "UserId is required" }, { status: 400 });
+  }
+
+  try {
+    await connect();
+
+    // Fetch all cart items for the user
+    const cartItems = await Cart.find({ userId });
+
+    // Get product details for each cart item
+    const productIds = cartItems.map((item) => item.productId);
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    // Merge cart data with product data
+    const cartWithProductDetails = cartItems.map((item) => {
+      const product = products.find((p) => p._id.toString() === item.productId.toString());
+      if (product) {
+        return {
+          ...item.toObject(),
+          productName: product.productName,
+          productDescription: product.productDescription,
+          productPrice: product.productPrice,
+          productImage: product.productImage,
+        };
+      }
+      return item; // If no product found, return the cart item as is
+    });
+
+    return NextResponse.json(cartWithProductDetails);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+};
 
 // DELETE method: Remove product from the cart
 export async function DELETE(req: Request) {
@@ -109,7 +106,7 @@ export async function DELETE(req: Request) {
     }
 
     return NextResponse.json({ message: "Product removed from cart" });
-  } catch (error:any) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

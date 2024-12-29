@@ -3,6 +3,24 @@ import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { Button, Card, Avatar } from "@nextui-org/react";
 import Navbar from "../components/navbar";
+import { useUser } from "@auth0/nextjs-auth0/client";
+
+// Utility function to fetch user ID
+const fetchUserId = async (email: string): Promise<string | null> => {
+  try {
+    const response = await fetch(`/api/getUserId?email=${email}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.userId || null;
+    } else {
+      console.error("Failed to fetch user ID");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    return null;
+  }
+};
 
 interface CartItem {
   _id: string;
@@ -15,13 +33,33 @@ interface CartItem {
 }
 
 const MyCart = () => {
+  const { user } = useUser();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loadingUserId, setLoadingUserId] = useState<boolean>(true);
+
+  // Fetch user ID when email is available
+  useEffect(() => {
+    const fetchUser = async () => {
+      const email = user?.email; // Replace with the actual email from session or auth
+      if (email) {
+        setLoadingUserId(true);
+        const fetchedUserId = await fetchUserId(email);
+        if (fetchedUserId) {
+          setUserId(fetchedUserId);
+        }
+        setLoadingUserId(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchCartItems = async () => {
-      const userId = "676c32de895813f55307c58f"; // Replace with the actual user ID from session or auth
+      if (!userId) return; // Ensure userId is available before fetching cart items
       try {
         const response = await fetch(`/api/cart?userId=${userId}`);
         if (!response.ok) {
@@ -37,14 +75,18 @@ const MyCart = () => {
     };
 
     fetchCartItems();
-  }, []);
+  }, [userId]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const handleRemoveFromCart = async (productId: string) => {
-    const userId = "676c32de895813f55307c58f"; // Replace with actual user ID
+    if (!userId) {
+      alert("User not logged in. Please log in to remove items from the cart.");
+      return;
+    }
+
     try {
       const response = await fetch(`/api/cart?userId=${userId}&productId=${productId}`, {
         method: "DELETE",
@@ -77,8 +119,8 @@ const MyCart = () => {
 
           {cartItems
             .filter((item) =>
-                item.productName && item.productName.toLowerCase().includes(searchTerm.toLowerCase())
-              )
+              item.productName && item.productName.toLowerCase().includes(searchTerm.toLowerCase())
+            )
             .map((cartItem) => (
               <Card
                 key={cartItem._id}

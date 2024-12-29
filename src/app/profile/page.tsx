@@ -25,10 +25,29 @@ const Profile: React.FC = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const fetchProducts = async () => {
+  const fetchUserId = async () => {
     try {
-      const response = await fetch(`/api/userProducts?userId=676fd86ecc391e12861a89c0`);
+      const response = await fetch(`/api/getUserId?email=${user?.email}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.userId; // Returns the user ID
+      } else {
+        console.error("Failed to fetch user ID");
+      }
+    } catch (error) {
+      console.error("Error fetching user ID:", error);
+    }
+    return null;
+  };
+  
+  
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const userId = await fetchUserId();
+      if (!userId) throw new Error("User ID not found");
+  
+      const response = await fetch(`/api/userProducts?userId=${userId}`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -41,84 +60,53 @@ const Profile: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (editingProductId) {
-      // If we're editing a product, use PATCH
-      try {
-        const response = await fetch(`/api/userProducts/${editingProductId}?userId=676fd86ecc391e12861a89c0`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+    const userId = await fetchUserId();
+    if (!userId) {
+      alert("User ID not found. Please try again.");
+      return;
+    }
+  
+    const url = editingProductId
+      ? `/api/userProducts/${editingProductId}?userId=${userId}`
+      : `/api/userProducts?userId=${userId}`;
+    const method = editingProductId ? "PATCH" : "POST";
+  
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        const message = editingProductId ? "Product updated successfully!" : "Product added successfully!";
+        alert(message);
+        fetchProducts(); // Refresh product list
+        setShowForm(false);
+        setEditingProductId(null);
+        setFormData({
+          productName: "",
+          productDescription: "",
+          productPrice: 0,
+          productImage: "",
+          productCategory: "",
+          productQuantity: 0,
+          productRating: 0,
         });
-
-        if (response.ok) {
-          // Update the product in the state
-          setProducts((prevProducts) =>
-            prevProducts.map((product) =>
-              product._id === editingProductId ? { ...product, ...formData } : product
-            )
-          );
-          setShowForm(false);
-          setEditingProductId(null); // Reset editing mode
-          setFormData({
-            productName: "",
-            productDescription: "",
-            productPrice: 0,
-            productImage: "",
-            productCategory: "",
-            productQuantity: 0,
-            productRating: 0,
-          });
-          alert("Product updated successfully!");
-        } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
-        }
-      } catch (error) {
-        alert("Failed to update product. Please try again.");
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
       }
-    } else {
-      // If it's a new product, use POST (same as before)
-      try {
-        const response = await fetch(`/api/userProducts?userId=676fd86ecc391e12861a89c0`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (response.ok) {
-          alert("Product added successfully!");
-          const newProduct = {
-            ...formData,
-            _id: Date.now().toString(),
-          };
-          setProducts((prevProducts) => [...prevProducts, newProduct]);
-          setShowForm(false);
-          setFormData({
-            productName: "",
-            productDescription: "",
-            productPrice: 0,
-            productImage: "",
-            productCategory: "",
-            productQuantity: 0,
-            productRating: 0,
-          });
-        } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
-        }
-      } catch (error) {
-        alert("Failed to add product. Please try again.");
-      }
+    } catch (error) {
+      alert("Failed to submit the form. Please try again.");
     }
   };
+  
 
   const handleEdit = (product: any) => {
     setFormData({
@@ -135,11 +123,17 @@ const Profile: React.FC = () => {
   };
 
   const handleDelete = async (productId: string) => {
+    const userId = await fetchUserId();
+    if (!userId) {
+      alert("User ID not found. Please try again.");
+      return;
+    }
+  
     try {
-      const response = await fetch(`/api/userProducts/${productId}?userId=676fd86ecc391e12861a89c0`, {
+      const response = await fetch(`/api/userProducts/${productId}?userId=${userId}`, {
         method: "DELETE",
       });
-
+  
       if (response.ok) {
         setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
         alert("Product deleted successfully!");
@@ -151,6 +145,7 @@ const Profile: React.FC = () => {
       alert("Failed to delete product. Please try again.");
     }
   };
+  
 
   useEffect(() => {
     fetchProducts();
