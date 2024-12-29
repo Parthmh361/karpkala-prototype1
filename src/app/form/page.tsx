@@ -15,7 +15,6 @@ export default function Form() {
     username: "",
     name: "",
     contactInfo: "",
-    location: "",
     typeOfCotton: "",
     yearsInFarming: "",
     address: "",
@@ -193,8 +192,8 @@ export default function Form() {
                         <input
                           type="text"
                           id="location"
-                          name="location"
-                          value={formData.location}
+                          name="address"
+                          value={formData.address}
                           onChange={handleChange}
                           className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />

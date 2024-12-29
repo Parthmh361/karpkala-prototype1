@@ -1,10 +1,15 @@
-import React from 'react'
+import React from "react";
 
 const FarmerForm: React.FC = () => {
   return (
     <>
       <div>
-        <label htmlFor="farmLocation" className="block text-sm font-medium text-gray-700">Farm Location</label>
+        <label
+          htmlFor="farmLocation"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Farm Location
+        </label>
         <input
           type="text"
           id="farmLocation"
@@ -14,7 +19,12 @@ const FarmerForm: React.FC = () => {
         />
       </div>
       <div>
-        <label htmlFor="cottonType" className="block text-sm font-medium text-gray-700">Type of Cotton Grown</label>
+        <label
+          htmlFor="cottonType"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Type of Cotton Grown
+        </label>
         <input
           type="text"
           id="cottonType"
@@ -23,7 +33,12 @@ const FarmerForm: React.FC = () => {
         />
       </div>
       <div>
-        <label htmlFor="farmingYears" className="block text-sm font-medium text-gray-700">Years in Cotton Farming</label>
+        <label
+          htmlFor="farmingYears"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Years in Cotton Farming
+        </label>
         <input
           type="number"
           id="farmingYears"
@@ -33,8 +48,7 @@ const FarmerForm: React.FC = () => {
         />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default FarmerForm
-
+export default FarmerForm;
