@@ -55,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
         {/* Close Sidebar Icon */}
         <button
           onClick={toggleSidebar}
-          className="text-gray-600 mb-6 text-lg font-semibold"
+          className="text-gray-600 mb-6 text-lg font-semibold "
         >
           <FiX size={24} />
         </button>
@@ -75,27 +75,45 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
           </div>
         </div>
         <div className="space-y-4">
-          <Link href="/" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiHome size={22} />
             <span>Home</span>
           </Link>
-          <Link href="/news" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/news"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiBook size={22} />
             <span>News</span>
           </Link>
-          <Link href="/profile" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/profile"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiUser size={22} />
             <span>Profile</span>
           </Link>
-          <Link href="/cart" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/cart"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiShoppingCart size={22} />
             <span>My Cart</span>
           </Link>
-          <Link href="/orderAndHistory" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/orderAndHistory"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiClipboard size={22} />
             <span>Order & History</span>
           </Link>
-          <Link href="/privacyPolicy" className="flex items-center space-x-3 text-gray-600 text-lg h-11">
+          <Link
+            href="/privacyPolicy"
+            className="flex items-center space-x-3 text-gray-600 text-lg h-11"
+          >
             <FiHelpCircle size={22} />
             <span>Support</span>
           </Link>
@@ -118,43 +136,61 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
       </aside>
 
       {/* Top Navbar */}
-      <div className="flex justify-between items-center px-4 py-2 bg-black">
+      <div className="flex justify-between items-center px-4 py-3 bg-black">
         <div className="logo h-9 w-9 bg-white rounded-md"></div>
 
         {/* Centered Navigation Links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiHome />
-            <span>Home</span>
+          <Link
+            href="/"
+            className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
+          >
+            {/* <FiHome /> */}
+            <span>HOME</span>
           </Link>
-          <Link href="/news" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiBook />
-            <span>News</span>
+          <Link
+            href="/news"
+            className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
+          >
+            {/* <FiBook /> */}
+            <span>NEWS</span>
           </Link>
-          <Link href="/profile" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiUser />
-            <span>Profile</span>
+          <Link
+            href="/profile"
+            className="text-white text-lg font-medium flex items-center space-x-2 w-24 justify-center tracking-wider"
+          >
+            {/* <FiUser /> */}
+            <span>PROFILE</span>
           </Link>
-          <Link href="/cart" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiShoppingCart />
-            <span>My Cart</span>
+          <Link
+            href="/cart"
+            className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
+          >
+            {/* <FiShoppingCart /> */}
+            <span>CART</span>
           </Link>
-          <Link href="/orderAndHistory" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiClipboard />
-            <span>Order & History</span>
+          <Link
+            href="/orderAndHistory"
+            className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
+          >
+            {/* <FiClipboard /> */}
+            <span>HISTORY</span>
           </Link>
-          <Link href="/privacyPolicy" className="text-white text-lg font-medium flex items-center space-x-2">
-            <FiHelpCircle />
-            <span>Support</span>
+          <Link
+            href="/privacyPolicy"
+            className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
+          >
+            {/* <FiHelpCircle /> */}
+            <span>SUPPORT</span>
           </Link>
           {user ? (
-            <button className="text-white text-lg font-medium flex items-center space-x-2">
+            <button className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider">
               <span>Logout</span>
             </button>
           ) : (
             <Link
               href="/api/auth/login"
-              className="text-white text-lg font-medium flex items-center space-x-2"
+              className="text-white text-lg font-medium flex items-center space-x-2 lg:w-24 justify-center tracking-wider"
             >
               <span>Login</span>
             </Link>
@@ -169,7 +205,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
         {/* Sidebar Toggle Button */}
         <button
           onClick={toggleSidebar}
-          className="text-white text-3xl"
+          className="text-white text-3xl md:hidden"
         >
           <FiMenu />
         </button>
