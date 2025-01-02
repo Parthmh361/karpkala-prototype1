@@ -21,6 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  // console.log(user);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

@@ -17,9 +17,10 @@ const Profile: React.FC = () => {
     productQuantity: 0,
     productRating: 0,
   });
+  const [logedUser, setLogedUser] = useState<string>()
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [editingProductId, setEditingProductId] = useState<string | null>(null); // Track the product being edited
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,9 +28,11 @@ const Profile: React.FC = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const fetchUserId = async () => {
+
+  const fetchUserId = async (): Promise<string | null> => {
+    if (!user?.email) return null;
     try {
-      const response = await fetch(`/api/getUserId?email=${user?.email}`);
+      const response = await fetch(`/api/getUserId?email=${user.email}`);
       if (response.ok) {
         const data = await response.json();
         return data.userId; // Returns the user ID
@@ -42,7 +45,24 @@ const Profile: React.FC = () => {
     return null;
   };
 
+  const fetchUser = async () => {
+    if (!user?.email) return;
+    try {
+      const userId = await fetchUserId()
+      const response = await fetch(`/api/singleUser?_id=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setLogedUser(data.user.name);
+      }
+      
+    } catch (error) {
+      
+    }
+  }
+
   const fetchProducts = async () => {
+    fetchUser()
+    if (!user?.email) return;
     setLoading(true);
     try {
       const userId = await fetchUserId();
@@ -154,13 +174,10 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
+    if (user?.email) {
+      fetchProducts();
+    }
+  }, [user]); // Trigger fetching products only when user is available
   return (
     <>
       <div className="bg-white min-h-screen text-black">
@@ -168,13 +185,15 @@ const Profile: React.FC = () => {
         <div className="profile_page flex flex-col md:flex-row">
           <div
             id="user_info"
-            className="flex flex-col justify-center md:justify-start items-center mt-6 gap-3"
+            className="flex flex-col justify-center md:justify-start items-center mt-6 gap-3 lg:w-[300px]"
           >
-            <div className="w-16 h-16 rounded-full bg-black m-3">
+            <div className="w-16 h-16 rounded-full bg-black m-3 overflow-hidden">
               <img src={user?.picture || ""} alt="User Avatar" />
             </div>
-            <p>{user?.name}</p>
-            <p className="text-slate-500">{user?.email}</p>
+            <div className="w-[90%] grid grid-cols-1 gap-2">
+              <p>{logedUser}</p>
+              <p className="text-slate-500">{user?.email}</p>
+            </div>
             <Link href={"/api/auth/logout"} className="text-[#545f70] text-lg">
               Logout
             </Link>

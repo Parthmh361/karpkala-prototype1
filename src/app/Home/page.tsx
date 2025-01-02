@@ -143,7 +143,7 @@ const Home = () => {
                     //product card
                     <Card
                       key={product._id}
-                      className="w-full lg:max-w-[600px] p-5 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
+                      className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
                     >
                       <div className="flex flex-row gap-3">
                         <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">

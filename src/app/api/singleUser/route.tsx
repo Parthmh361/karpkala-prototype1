@@ -13,6 +13,9 @@ export const GET = async (request: Request, context: { params: any }) => {
       if (searchParams.has("username")) {
         return searchParams.get("username");
       }
+      if (searchParams.has("_id")) {
+        return searchParams.get("_id");
+      }
       return searchParams.get("email");
     };
 
@@ -37,7 +40,7 @@ export const GET = async (request: Request, context: { params: any }) => {
 
     // Query database by email or username
     const user = await User.findOne({
-      $or: [{ email: userParamValue }, { username: userParamValue }],
+      $or: [{ email: userParamValue }, { username: userParamValue }, {_id: userParamValue}],
     });
 
     if (!user) {
