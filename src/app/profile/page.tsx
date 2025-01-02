@@ -202,7 +202,7 @@ const Profile: React.FC = () => {
             <div className="mt-8">
               <p className="mb-4">
                 Your Product{" "}
-                <span className="hidden min-[720px]:inline">| Wishlisted</span>
+                {/* <span className="hidden min-[720px]:inline">| Wishlisted</span> */}
               </p>
               <button
                 onClick={() => setShowForm(true)}
@@ -295,7 +295,7 @@ const Profile: React.FC = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block mb-2">Rating</label>
+                      <label className="block mb-2">Moisture Content</label>
                       <input
                         type="number"
                         name="productRating"

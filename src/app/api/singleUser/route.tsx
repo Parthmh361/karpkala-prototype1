@@ -1,5 +1,6 @@
 import connect from "@/LIB/db";
 import User from "@/LIB/modals/user";
+import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 
 const isValidEmail = (email: any) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -38,10 +39,20 @@ export const GET = async (request: Request, context: { params: any }) => {
 
     await connect();
 
-    // Query database by email or username
-    const user = await User.findOne({
-      $or: [{ email: userParamValue }, { username: userParamValue }, {_id: userParamValue}],
-    });
+    const isObjectId = Types.ObjectId.isValid(userParamValue);
+    console.log(isObjectId)
+
+    const query = isObjectId
+      ? {
+          $or: [
+            { email: userParamValue },
+            { username: userParamValue },
+            { _id: userParamValue },
+          ],
+        }
+      : { $or: [{ email: userParamValue }, { username: userParamValue }] };
+
+    const user = await User.findOne(query);
 
     if (!user) {
       return new NextResponse(JSON.stringify({ message: "No user found" }), {

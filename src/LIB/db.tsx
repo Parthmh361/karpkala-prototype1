@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
+// const MONGODB_URI =
+//   "mongodb+srv://parthchoudhari3612:qsefthikp@cluster0.ccucqrl.mongodb.net//?retryWrites=true&w=majority";
 const MONGODB_URI =
-  "mongodb+srv://parthchoudhari3612:qsefthikp@cluster0.ccucqrl.mongodb.net//?retryWrites=true&w=majority";
+  "mongodb+srv://satyamkalihari17:NsQKehe47zZWkwLJ@cluster0.wgdwt.mongodb.net/?retryWrites=true&w=majority";
+
 const connect = async () => {
   if (mongoose.connection.readyState >= 1) {
     console.log("Already connected to the database");
@@ -14,7 +17,7 @@ const connect = async () => {
     });
     console.log("Connected to the database");
   } catch (err) {
-    console.error("Database connection error:", err);
+    console.log("Database connection error:", err);
     throw err;
   }
 };
