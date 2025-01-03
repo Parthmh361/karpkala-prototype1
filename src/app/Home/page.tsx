@@ -5,6 +5,7 @@ import Navbar from "../components/navbar";
 import Hero from "../components/hero";
 import { Card, Button, Avatar, Spinner } from "@nextui-org/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Link from "next/link";
 
 // Define Types
 interface ProductData {
@@ -131,7 +132,6 @@ const Home = () => {
             </div>
           ) : products.length > 0 ? (
             <div className="flex flex-col items-center justify-center mt-6">
-              
               <div className="grid md:grid-cols-2 gap-6 gap-x-10 mt-6">
                 {products
                   .filter((product) =>
@@ -141,43 +141,48 @@ const Home = () => {
                   )
                   .map((product) => (
                     //product card
-                    <Card
+                    <Link
+                      href={`/productDetails/${product._id}`}
                       key={product._id}
-                      className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
                     >
-                      <div className="flex flex-row gap-3">
-                        <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
-                          {product.productImage ? (
-                            <img
-                              src={product.productImage}
-                              alt={product.productName}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          ) : (
-                            <Avatar size="lg" />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-[#545f70] font-semibold text-lg">
-                            {product.productName}
-                          </div>
-                          <div className="text-[#545f70] mt-2">
-                            {product.productDescription}
-                          </div>
-                          <div className="text-[#545f70] font-semibold mt-2 text-xl">
-                            <span>&#8377;</span>{" "}
-                            {product.productPrice.toFixed(2)}
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        color="primary"
-                        className="w-full mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
-                        onClick={() => handleAddToCart(product._id)}
+                      <Card
+                        key={product._id}
+                        className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
                       >
-                        Add to Cart
-                      </Button>
-                    </Card>
+                        <div className="flex flex-row gap-3">
+                          <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
+                            {product.productImage ? (
+                              <img
+                                src={product.productImage}
+                                alt={product.productName}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            ) : (
+                              <Avatar size="lg" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-[#545f70] font-semibold text-lg">
+                              {product.productName}
+                            </div>
+                            <div className="text-[#545f70] mt-2">
+                              {product.productDescription}
+                            </div>
+                            <div className="text-[#545f70] font-semibold mt-2 text-xl">
+                              <span>&#8377;</span>{" "}
+                              {product.productPrice.toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          color="primary"
+                          className="w-full mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
+                          onClick={() => handleAddToCart(product._id)}
+                        >
+                          Add to Cart
+                        </Button>
+                      </Card>
+                    </Link>
                   ))}
               </div>
             </div>
