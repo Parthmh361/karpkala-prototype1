@@ -6,6 +6,7 @@ import { Button, Badge, Card } from "@nextui-org/react";
 import { Star, ShoppingCart, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface ProductData {
   productName: string;
@@ -17,33 +18,20 @@ interface ProductData {
   productRating: number; // Moisture Content
 }
 
-export default function ProductDetail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default function ProductDetail({ params }: { params: { id: string } }) {
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState<ProductData>({
-    productName: "",
-    productDescription: "",
-    productPrice: 0,
-    productImage: "",
-    productCategory: "",
-    productQuantity: 0,
-    productRating: 0, // Moisture Content
-  });
+  const [product, setProduct] = useState<ProductData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [loadingUserId, setLoadingUserId] = useState<boolean>(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const unwrappedParams = await params; // Unwrap the params Promise
-        console.log(unwrappedParams.id);
-        const response = await fetch(
-          `/api/allProducts?id=${unwrappedParams.id}`
-        );
+        const response = await fetch(`/api/allProducts?id=${params.id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch product data");
         }
@@ -65,39 +53,93 @@ export default function ProductDetail({
     };
 
     fetchProduct();
-  }, [params]);
+  }, [params.id]);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (user?.email) {
+        try {
+          setLoadingUserId(true);
+          const response = await fetch(`/api/getUserId?email=${user.email}`);
+          if (response.ok) {
+            const data = await response.json();
+            setUserId(data.userId);
+          } else {
+            console.error("Failed to fetch user ID");
+          }
+        } catch (error) {
+          console.error("Error fetching user ID:", error);
+        } finally {
+          setLoadingUserId(false);
+        }
+      }
+    };
+
+    fetchUserId();
+  }, [user?.email]);
+
+  const handleQuantityChange = (amount: number) => {
+    setQuantity((prev) =>
+      Math.max(1, Math.min(prev + amount, product?.productQuantity || 0))
+    );
+  };
+
+  const handleAddToCart = async () => {
+    if (loadingUserId) {
+      alert("Loading user information. Please wait.");
+      return;
+    }
+
+    if (!userId) {
+      alert("User not logged in. Please log in to add items to the cart.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        body: JSON.stringify({
+          userId,
+          productId: params.id,
+          quantity,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add product to cart");
+      }
+      alert("Product added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add product to cart. Please try again.");
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
-    return <p>Error: {error}</p>;
+  if (error || !product) {
+    return <p>Error: {error || "Product not found"}</p>;
   }
-
-  const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) =>
-      Math.max(1, Math.min(prev + amount, product.productQuantity))
-    );
-  };
 
   return (
     <div className="bg-white text-gray-800 h-screen">
-        <Navbar pageHeading={"Product"} />
-      {/* Back Button */}
+      <Navbar pageHeading={"Product"} />
       <Button
         variant="ghost"
         className="m-4 text-gray-700 hover:bg-gray-100"
         aria-label="Back to Products"
-        onPress={() => router.back()}
+        onClick={() => router.back()}
       >
         <ArrowLeft size={16} className="mr-2 text-gray-600" />
         Back to Products
       </Button>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Product Image */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md flex justify-center items-center">
           <Image
             src={product.productImage}
             alt={product.productName}
@@ -106,8 +148,6 @@ export default function ProductDetail({
             className="rounded-lg shadow-sm"
           />
         </div>
-
-        {/* Product Details */}
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.productName}</h1>
           <Badge
@@ -118,24 +158,18 @@ export default function ProductDetail({
             {product.productCategory}
           </Badge>
           <p className="text-gray-600 mb-4">{product.productDescription}</p>
-
-          {/* Moisture Content */}
           <div className="flex items-center mb-4">
             <Star className="text-yellow-500 mr-2" size={20} />
             <span className="font-semibold">
               {product.productRating}% Moisture Content
             </span>
           </div>
-
-          {/* Price */}
           <p className="text-2xl font-bold text-gray-800 mb-4">
             ${product.productPrice} per kg
           </p>
-
-          {/* Quantity Selector */}
           <div className="flex items-center mb-4">
             <Button
-              onPress={() => handleQuantityChange(-1)}
+              onClick={() => handleQuantityChange(-1)}
               disabled={quantity === 1}
               aria-label="Decrease quantity"
               className="bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -152,25 +186,13 @@ export default function ProductDetail({
               +
             </Button>
           </div>
-
-          {/* Add to Cart Button */}
           <Button
-            variant="solid"
             color="primary"
-            className="w-full mb-4 bg-blue-500 text-white hover:bg-blue-600"
+            className="w-full mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
+            onClick={handleAddToCart}
           >
             <ShoppingCart size={16} className="mr-2" /> Add to Cart
           </Button>
-
-          {/* Product Details */}
-          <Card className="mt-4 p-4 bg-gray-50 shadow-md">
-            <h3 className="font-semibold mb-2">Product Details:</h3>
-            <ul className="list-disc list-inside text-gray-700">
-              <li>Category: {product.productCategory}</li>
-              <li>Available Quantity: {product.productQuantity} kg</li>
-              <li>Moisture Content: {product.productRating}%</li>
-            </ul>
-          </Card>
         </div>
       </div>
     </div>

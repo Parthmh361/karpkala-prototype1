@@ -141,48 +141,57 @@ const Home = () => {
                   )
                   .map((product) => (
                     //product card
-                    <Link
-                      href={`/productDetails/${product._id}`}
+
+                    <Card
                       key={product._id}
+                      className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
                     >
-                      <Card
-                        key={product._id}
-                        className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5"
-                      >
-                        <div className="flex flex-row gap-3">
-                          <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
-                            {product.productImage ? (
-                              <img
-                                src={product.productImage}
-                                alt={product.productName}
-                                className="w-full h-full object-cover rounded-lg"
-                              />
-                            ) : (
-                              <Avatar size="lg" />
-                            )}
+                      <div className="flex flex-row gap-3">
+                        <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
+                          {product.productImage ? (
+                            <img
+                              src={product.productImage}
+                              alt={product.productName}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                          ) : (
+                            <Avatar size="lg" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-[#545f70] font-semibold text-lg">
+                            {product.productName}
                           </div>
-                          <div className="flex-1">
-                            <div className="text-[#545f70] font-semibold text-lg">
-                              {product.productName}
-                            </div>
-                            <div className="text-[#545f70] mt-2">
-                              {product.productDescription}
-                            </div>
-                            <div className="text-[#545f70] font-semibold mt-2 text-xl">
-                              <span>&#8377;</span>{" "}
-                              {product.productPrice.toFixed(2)}
-                            </div>
+                          <div className="text-[#545f70] mt-2">
+                            {product.productDescription}
+                          </div>
+                          <div className="text-[#545f70] font-semibold mt-2 text-xl">
+                            <span>&#8377;</span>{" "}
+                            {product.productPrice.toFixed(2)}
                           </div>
                         </div>
+                      </div>
+                      <div className="flex justify-between px-2 flex-col md:flex-row">
                         <Button
                           color="primary"
-                          className="w-full mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
-                          onClick={() => handleAddToCart(product._id)}
+                          className="w-60 mt-4 py-2 bg-[#318CE7] text-white border-0 hover:bg-[#4A92D3] rounded-md"
+                          onPress={() => handleAddToCart(product._id)}
                         >
                           Add to Cart
                         </Button>
-                      </Card>
-                    </Link>
+                        <Link
+                          href={`/productDetails/${product._id}`}
+                          key={product._id}
+                        >
+                          <Button
+                            color="primary"
+                            className="w-60 mt-4 py-2 border-[#318CE7] border-2 text-[#4A92D3] hover:scale-105 transition-all rounded-md"
+                          >
+                            See More
+                          </Button>
+                        </Link>
+                      </div>
+                    </Card>
                   ))}
               </div>
             </div>
