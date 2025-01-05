@@ -6,9 +6,8 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import Form from "./form/page";
 
 export default function Main() {
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
   const [isForm, setIsForm] = useState(false);
-  const [userData, setUserData] = useState(null); // Store fetched user data
   const [loading, setLoading] = useState(false); // Loading state for fetching user data
 
   useEffect(() => {
@@ -22,7 +21,6 @@ export default function Main() {
           const data = await response.json();
           console.log(data);
           if (response.ok) {
-            setUserData(data);
             if (!data.user.email || !data.user.name || !data.user.address) {
               setIsForm(true); // If essential data is missing, show form
             } else {
@@ -53,11 +51,13 @@ export default function Main() {
       <div className="flex items-center justify-center h-screen bg-gray-100">
         <div className="flex flex-col items-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-lg text-gray-600">Welcome to Karpkala Loading ....</p>
+          <p className="mt-4 text-lg text-gray-600">
+            Welcome to Karpkala Loading ....
+          </p>
         </div>
       </div>
     );
   }
-  
+
   return <>{isForm ? <Form /> : <Home />}</>;
 }

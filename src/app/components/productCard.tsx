@@ -23,7 +23,7 @@ const Product: React.FC<ProductCardProp> = ({ grids }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const userId = "your-user-id"; // Replace with the actual userId
+        // const userId = "your-user-id"; // Replace with the actual userId
         const response = await fetch(`api/userProducts?userId=676c32de895813f55307c58f`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");

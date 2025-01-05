@@ -35,8 +35,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "Product added to cart" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
@@ -61,7 +62,9 @@ export const GET = async (req: Request) => {
 
     // Merge cart data with product data
     const cartWithProductDetails = cartItems.map((item) => {
-      const product = products.find((p) => p._id.toString() === item.productId.toString());
+      const product = products.find(
+        (p) => p._id.toString() === item.productId.toString()
+      );
       if (product) {
         return {
           ...item.toObject(),
@@ -75,8 +78,9 @@ export const GET = async (req: Request) => {
     });
 
     return NextResponse.json(cartWithProductDetails);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 };
 
@@ -106,7 +110,8 @@ export async function DELETE(req: Request) {
     }
 
     return NextResponse.json({ message: "Product removed from cart" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const err = error as Error;
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

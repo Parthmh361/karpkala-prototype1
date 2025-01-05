@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button, Badge, Card } from "@nextui-org/react";
+import { Button, Badge } from "@nextui-org/react";
 import { Star, ShoppingCart, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar";
@@ -45,7 +45,8 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
         } else {
           throw new Error("No product found");
         }
-      } catch (err: any) {
+      } catch (error: unknown) {
+        const err = error as Error;
         setError(err.message || "An unexpected error occurred");
       } finally {
         setLoading(false);

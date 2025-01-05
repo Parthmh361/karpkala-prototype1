@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
-import { Card, Button, Avatar } from "@nextui-org/react";
+import { Card, Avatar } from "@nextui-org/react";
 
 const Profile: React.FC = () => {
   const { user } = useUser();
@@ -19,8 +19,10 @@ const Profile: React.FC = () => {
   });
   const [logedUser, setLogedUser] = useState<string>()
   const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+
+  
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

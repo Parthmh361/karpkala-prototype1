@@ -40,6 +40,9 @@ const MyCart = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingUserId, setLoadingUserId] = useState<boolean>(true);
 
+  if(loading){}
+  if(loadingUserId){}
+
   // Fetch user ID when email is available
   useEffect(() => {
     const fetchUser = async () => {

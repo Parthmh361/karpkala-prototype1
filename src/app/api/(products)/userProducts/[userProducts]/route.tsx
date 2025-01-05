@@ -4,7 +4,10 @@ import Product from "@/LIB/modals/product";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 
-export const PATCH = async (request: Request, context: { params: any }) => {
+export const PATCH = async (
+  request: Request,
+  context: { params: { userProducts: string } }
+) => {
   const productId = context.params.userProducts;
   try {
     const body = await request.json();
@@ -79,14 +82,18 @@ export const PATCH = async (request: Request, context: { params: any }) => {
       }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in updating product" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error;
+    return new NextResponse("Error in updating product" + err.message, {
       status: 500,
     });
   }
 };
 
-export const DELETE = async (request: Request, context: { params: any }) => {
+export const DELETE = async (
+  request: Request,
+  context: { params: { userProducts: string } }
+) => {
   const productId = context.params.userProducts;
   try {
     const { searchParams } = new URL(request.url);
@@ -132,8 +139,9 @@ export const DELETE = async (request: Request, context: { params: any }) => {
     return new NextResponse(JSON.stringify({ message: "product is deleted" }), {
       status: 200,
     });
-  } catch (error: any) {
-    return new NextResponse("Error in deleting product" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error;
+    return new NextResponse("Error in deleting product" + err.message, {
       status: 500,
     });
   }

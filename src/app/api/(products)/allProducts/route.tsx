@@ -12,7 +12,7 @@ export const GET = async (request: Request) => {
 
     await connect();
 
-    const filter: any = {};
+    const filter: Record<string, unknown> = {};
 
     // If an ID is provided, search by ID
     if (id) {
@@ -61,9 +61,10 @@ export const GET = async (request: Request) => {
     }
 
     return new NextResponse(JSON.stringify(products), { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return new NextResponse(
-      JSON.stringify({ message: "Error fetching products: " + error.message }),
+      JSON.stringify({ message: "Error fetching products: " + err.message }),
       { status: 500 }
     );
   }
