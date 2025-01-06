@@ -4,6 +4,7 @@ import { FiSearch } from "react-icons/fi";
 import { Button, Card, Avatar } from "@nextui-org/react";
 import Navbar from "../components/navbar";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Image from "next/image";
 
 // Utility function to fetch user ID
 const fetchUserId = async (email: string): Promise<string | null> => {
@@ -58,7 +59,7 @@ const MyCart = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [user?.email]);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -142,7 +143,9 @@ const MyCart = () => {
                     <div className="flex flex-row gap-3">
                       <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
                         {cartItem.productImage ? (
-                          <img
+                          <Image
+                          width={64}
+                          height={64}
                             src={cartItem.productImage}
                             alt={cartItem.productName}
                             className="w-full h-full object-cover rounded-lg"

@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Navbar from "../components/navbar";
 import Hero from "../components/hero";
 import { Card, Button, Avatar, Spinner } from "@nextui-org/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
+import Image from "next/image";
 
 // Define Types
 interface ProductData {
@@ -28,28 +29,28 @@ const Home = () => {
   const [loadingUserId, setLoadingUserId] = useState<boolean>(true);
 
   // Fetch user ID
-  const fetchUserId = async () => {
-    try {
-      setLoadingUserId(true); // Start loading userId
-      const response = await fetch(`/api/getUserId?email=${user?.email}`);
-      if (response.ok) {
-        const data = await response.json();
-        setUserId(data.userId);
-      } else {
-        console.error("Failed to fetch user ID");
-      }
-    } catch (error) {
-      console.error("Error fetching user ID:", error);
-    } finally {
-      setLoadingUserId(false); // Stop loading userId
-    }
-  };
-
-  useEffect(() => {
+  const fetchUserId = useCallback(async () => {
     if (user?.email) {
-      fetchUserId();
+      try {
+        setLoadingUserId(true);
+        const response = await fetch(`/api/getUserId?email=${user.email}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserId(data.userId);
+        } else {
+          console.error("Failed to fetch user ID");
+        }
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      } finally {
+        setLoadingUserId(false);
+      }
     }
-  }, [user?.email]);
+  }, [user?.email]); // Memoize the function with user?.email as a dependency
+  
+  useEffect(() => {
+    fetchUserId();
+  }, [fetchUserId]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -149,7 +150,9 @@ const Home = () => {
                       <div className="flex flex-row gap-3">
                         <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
                           {product.productImage ? (
-                            <img
+                            <Image
+                            height={64}
+                            width={64}
                               src={product.productImage}
                               alt={product.productName}
                               className="w-full h-full object-cover rounded-lg"

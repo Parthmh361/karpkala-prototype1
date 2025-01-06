@@ -12,6 +12,7 @@ import {
   FiX,
   FiMenu,
 } from "react-icons/fi";
+import Image from "next/image";
 
 interface NavbarProps {
   pageHeading: string;
@@ -65,7 +66,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageHeading }) => {
         <div className="w-full flex justify-center items-center py-5">
           <div className="profile_photo bg-blue-600 h-[15vh] w-[15vh] rounded-full overflow-hidden">
             {user ? (
-              <img
+              <Image
+              height={64}
+              width={64}
                 src={user?.picture ?? ""}
                 alt="Profile"
                 className="h-full w-full object-cover"

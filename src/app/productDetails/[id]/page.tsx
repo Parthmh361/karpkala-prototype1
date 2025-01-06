@@ -18,7 +18,7 @@ interface ProductData {
   productRating: number; // Moisture Content
 }
 
-export default function ProductDetail({ params }: { params: { id: string } }) {
+export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<ProductData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,11 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/allProducts?id=${params.id}`);
+        // Resolve the promise to get the actual params
+        const resolvedParams = await params;
+        const productId = resolvedParams.id;
+
+        const response = await fetch(`/api/allProducts?id=${productId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch product data");
         }
@@ -54,7 +58,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
     };
 
     fetchProduct();
-  }, [params.id]);
+  }, [params]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -97,11 +101,13 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
     }
 
     try {
+      const resolvedParams = await params;
+      const productId = resolvedParams.id;
       const response = await fetch("/api/cart", {
         method: "POST",
         body: JSON.stringify({
           userId,
-          productId: params.id,
+          productId: productId, // Use params.id directly
           quantity,
         }),
         headers: {

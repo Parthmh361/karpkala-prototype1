@@ -4,12 +4,14 @@ import Product from "@/LIB/modals/product";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 
+// PATCH method to update a product
 export const PATCH = async (
   request: Request,
-  context: { params: { userProducts: string } }
+  context: { params: Promise<{ userProducts: string }> } // Update type to Promise
 ) => {
-  const productId = context.params.userProducts;
   try {
+    const { userProducts: productId } = await context.params; // Await the params
+
     const body = await request.json();
     const {
       productName,
@@ -24,6 +26,7 @@ export const PATCH = async (
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
+    // Validate userId
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse(
         JSON.stringify({ message: "Invalid or missing userId" }),
@@ -31,6 +34,7 @@ export const PATCH = async (
       );
     }
 
+    // Validate productId
     if (!productId || !Types.ObjectId.isValid(productId)) {
       return new NextResponse(
         JSON.stringify({ message: "Invalid or missing productId" }),
@@ -38,7 +42,7 @@ export const PATCH = async (
       );
     }
 
-    await connect();
+    await connect(); // Connect to the database
 
     const user = await User.findById(userId);
 
@@ -52,13 +56,14 @@ export const PATCH = async (
 
     if (!product) {
       return new NextResponse(
-        JSON.stringify({ message: "product not found" }),
+        JSON.stringify({ message: "Product not found" }),
         {
           status: 404,
         }
       );
     }
 
+    // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       {
@@ -84,21 +89,25 @@ export const PATCH = async (
     );
   } catch (error: unknown) {
     const err = error as Error;
-    return new NextResponse("Error in updating product" + err.message, {
+    return new NextResponse("Error in updating product: " + err.message, {
       status: 500,
     });
   }
 };
 
+// DELETE method to delete a product
 export const DELETE = async (
   request: Request,
-  context: { params: { userProducts: string } }
+  context: { params: Promise<{ userProducts: string }> }
 ) => {
-  const productId = context.params.userProducts;
   try {
+    // Await the `params` to resolve the promise
+    const { userProducts: productId } = await context.params;
+
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
+    // Validate userId
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse(
         JSON.stringify({ message: "Invalid or missing userId" }),
@@ -106,6 +115,7 @@ export const DELETE = async (
       );
     }
 
+    // Validate productId
     if (!productId || !Types.ObjectId.isValid(productId)) {
       return new NextResponse(
         JSON.stringify({ message: "Invalid or missing productId" }),
@@ -113,7 +123,7 @@ export const DELETE = async (
       );
     }
 
-    await connect();
+    await connect(); // Connect to the database
 
     const user = await User.findById(userId);
     if (!user) {
@@ -126,22 +136,21 @@ export const DELETE = async (
     if (!product) {
       return new NextResponse(
         JSON.stringify({
-          message: "product not found or does not belong to the user",
+          message: "Product not found or does not belong to the user",
         }),
-        {
-          status: 404,
-        }
+        { status: 404 }
       );
     }
 
+    // Delete the product
     await Product.findByIdAndDelete(productId);
 
-    return new NextResponse(JSON.stringify({ message: "product is deleted" }), {
+    return new NextResponse(JSON.stringify({ message: "Product is deleted" }), {
       status: 200,
     });
   } catch (error: unknown) {
     const err = error as Error;
-    return new NextResponse("Error in deleting product" + err.message, {
+    return new NextResponse("Error in deleting product: " + err.message, {
       status: 500,
     });
   }
