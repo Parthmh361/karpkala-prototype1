@@ -62,14 +62,19 @@ const fetchMarathiNews = async (): Promise<NewsItem[]> => {
 
 // Fetch Telugu News
 const fetchTeluguNews = async (): Promise<NewsItem[]> => {
-  const url = "https://www.sakshi.com/tags/cotton-pricenews";
+  const url = "https://www.sakshi.com/tags/cotton-price";
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
   const news: NewsItem[] = [];
 
-  $(".news_list_li .news_title").each((_, el) => {
-    const title = $(el).text().trim();
-    const link = $(el).parent().attr("href") || "";
+  $(".news_list_li").each((_, el) => {
+    const title = $(el).find(".news_title").text().trim();
+    let link = $(el).find("a").attr("href") || "";
+
+    // Resolve the relative URL to an absolute URL
+    if (link.startsWith("/")) {
+      link = `https://www.sakshi.com${link}`;
+    }
 
     if (title) {
       news.push({
@@ -82,6 +87,7 @@ const fetchTeluguNews = async (): Promise<NewsItem[]> => {
 
   return news;
 };
+
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

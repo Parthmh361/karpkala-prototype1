@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import FarmerForm from "../components/FarmerForm";
-import BuyerForm from "../components/BuyerForm";
+// import FarmerForm from "../components/FarmerForm";
+// import BuyerForm from "../components/BuyerForm";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Form() {
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
   const [userType, setUserType] = useState<"farmer" | "buyer" | null>(null);
   const [isUsernameUnique, setIsUsernameUnique] = useState(true);
   const [formData, setFormData] = useState({
@@ -30,6 +30,8 @@ export default function Form() {
     await new Promise((resolve) => setTimeout(resolve, 500));
     if (response.ok) {
       setIsUsernameUnique(false);
+    } else {
+      setIsUsernameUnique(true);
     }
   };
 

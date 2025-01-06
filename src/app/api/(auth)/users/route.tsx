@@ -12,8 +12,9 @@ export const GET = async () => {
     await connect();
     const users = await User.find();
     return new NextResponse(JSON.stringify(users), { status: 200 });
-  } catch (error: any) {
-    return new NextResponse("Error in fetching users" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error
+    return new NextResponse("Error in fetching users" + err.message, {
       status: 500,
     });
   }
@@ -30,8 +31,9 @@ export const POST = async (request: Request) => {
       JSON.stringify({ message: "User is created", user: newUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in creating user" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error
+    return new NextResponse("Error in creating user" + err.message, {
       status: 500,
     });
   }
@@ -75,8 +77,9 @@ export const PATCH = async (request: Request) => {
       JSON.stringify({ message: "User is updated", user: updatedUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in updating user" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error
+    return new NextResponse("Error in updating user" + err.message, {
       status: 500,
     });
   }
@@ -86,7 +89,7 @@ export const DELETE = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
-  
+
     if (!userId) {
       return new NextResponse(
         JSON.stringify({
@@ -95,16 +98,18 @@ export const DELETE = async (request: Request) => {
         { status: 400 }
       );
     }
-  
+
     if (!Types.ObjectId.isValid(userId)) {
       return new NextResponse(JSON.stringify({ message: "Invalid userId" }), {
         status: 400,
       });
     }
-  
+
     await connect();
-  
-    const deletedUser = await User.findByIdAndDelete(new Types.ObjectId(userId));
+
+    const deletedUser = await User.findByIdAndDelete(
+      new Types.ObjectId(userId)
+    );
     if (!deletedUser) {
       return new NextResponse(JSON.stringify({ message: "User not found" }), {
         status: 400,
@@ -114,7 +119,10 @@ export const DELETE = async (request: Request) => {
       JSON.stringify({ message: "User is deleted", user: deletedUser }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in deleting user" + error.message, {status: 500})
+  } catch (error: unknown) {
+    const err = error as Error
+    return new NextResponse("Error in deleting user" + err.message, {
+      status: 500,
+    });
   }
 };

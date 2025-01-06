@@ -4,8 +4,6 @@ import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 import Product from "@/LIB/modals/product";
 
-const ObjectId = require("mongoose").Types.ObjectId;
-
 export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
@@ -39,9 +37,10 @@ export const GET = async (request: Request) => {
     }
 
     return new NextResponse(JSON.stringify(product), { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return new NextResponse(
-      JSON.stringify({ message: "Error in fetching products" } + error.message),
+      JSON.stringify({ message: "Error in fetching products" } + err.message),
       { status: 500 }
     );
   }
@@ -95,8 +94,9 @@ export const POST = async (request: Request) => {
       JSON.stringify({ message: "Product created successfully" }),
       { status: 200 }
     );
-  } catch (error: any) {
-    return new NextResponse("Error in creating the product" + error.message, {
+  } catch (error: unknown) {
+    const err = error as Error;
+    return new NextResponse("Error in creating the product" + err.message, {
       status: 500,
     });
   }

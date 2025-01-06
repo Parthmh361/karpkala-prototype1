@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import NewsCard from "../components/newsCard";
 import Navbar from "../components/navbar";
 import Hero from "../components/hero";
@@ -15,7 +15,9 @@ const NewsPage = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [language, setLanguage] = useState<string>("hindi");
 
-  const fetchNews = async () => {
+ 
+  const fetchNews = useCallback(async() => {
+
     try {
       const res = await fetch(`/api/news?lang=${language}`);
       const data = await res.json();
@@ -23,11 +25,10 @@ const NewsPage = () => {
     } catch (error) {
       console.error("Failed to fetch news:", error);
     }
-  };
-
+  }, [language]);
   useEffect(() => {
     fetchNews();
-  }, [language]);
+  }, [language, fetchNews]);
 
   return (
     <div className="bg-white min-h-screen text-black">

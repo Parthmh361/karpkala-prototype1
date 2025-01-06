@@ -4,6 +4,7 @@ import { FiSearch } from "react-icons/fi";
 import { Button, Card, Avatar } from "@nextui-org/react";
 import Navbar from "../components/navbar";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Image from "next/image";
 
 // Utility function to fetch user ID
 const fetchUserId = async (email: string): Promise<string | null> => {
@@ -40,6 +41,9 @@ const MyCart = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingUserId, setLoadingUserId] = useState<boolean>(true);
 
+  if(loading){}
+  if(loadingUserId){}
+
   // Fetch user ID when email is available
   useEffect(() => {
     const fetchUser = async () => {
@@ -55,7 +59,7 @@ const MyCart = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [user?.email]);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -88,14 +92,19 @@ const MyCart = () => {
     }
 
     try {
-      const response = await fetch(`/api/cart?userId=${userId}&productId=${productId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/cart?userId=${userId}&productId=${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to remove product from cart");
       }
       alert("Product removed from cart!");
-      setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.productId !== productId)
+      );
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
@@ -116,48 +125,62 @@ const MyCart = () => {
             />
             <FiSearch className="text-[#545f70]" size={22} />
           </div>
-
-          {cartItems
-            .filter((item) =>
-              item.productName && item.productName.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((cartItem) => (
-              <Card
-                key={cartItem._id}
-                className="w-full md:min-w-[300px] p-5 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5 mt-6"
-              >
-                <div className="flex flex-row gap-3">
-                  <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
-                    {cartItem.productImage ? (
-                      <img
-                        src={cartItem.productImage}
-                        alt={cartItem.productName}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    ) : (
-                      <Avatar size="lg" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-[#545f70] font-semibold text-lg">
-                      {cartItem.productName}
+          <div className="flex flex-col items-center justify-center mt-6">
+            <div className="grid md:grid-cols-2 gap-6 gap-x-10 mt-6">
+              {cartItems
+                .filter(
+                  (item) =>
+                    item.productName &&
+                    item.productName
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                )
+                .map((cartItem) => (
+                  <Card
+                    key={cartItem._id}
+                    className="w-full lg:max-w-[600px] p-5 bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out gap-5 mt-6"
+                  >
+                    <div className="flex flex-row gap-3">
+                      <div className="w-24 h-24 bg-[#eef0f4] rounded-lg flex items-center justify-center mb-4">
+                        {cartItem.productImage ? (
+                          <Image
+                          width={64}
+                          height={64}
+                            src={cartItem.productImage}
+                            alt={cartItem.productName}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        ) : (
+                          <Avatar size="lg" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-[#545f70] font-semibold text-lg">
+                          {cartItem.productName}
+                        </div>
+                        <div className="text-[#545f70] mt-2">
+                          {cartItem.productDescription}
+                        </div>
+                        <div className="text-[#545f70] font-semibold mt-2 text-xl">
+                          <span>&#8377;</span>{" "}
+                          {cartItem.productPrice.toFixed(2)}
+                        </div>
+                        <div className="mt-2 text-[#545f70]">
+                          Quantity: {cartItem.quantity}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-[#545f70] mt-2">{cartItem.productDescription}</div>
-                    <div className="text-[#545f70] font-semibold mt-2 text-xl">
-                      <span>&#8377;</span> {cartItem.productPrice.toFixed(2)}
-                    </div>
-                    <div className="mt-2 text-[#545f70]">Quantity: {cartItem.quantity}</div>
-                  </div>
-                </div>
-                <Button
-                  color="warning"
-                  className="w-full mt-4 py-2 bg-red-500 text-white border-0 hover:bg-red-600 rounded-md"
-                  onClick={() => handleRemoveFromCart(cartItem.productId)}
-                >
-                  Remove from Cart
-                </Button>
-              </Card>
-            ))}
+                    <Button
+                      color="warning"
+                      className="w-full mt-4 py-2 bg-red-500 text-white border-0 hover:bg-red-600 rounded-md"
+                      onClick={() => handleRemoveFromCart(cartItem.productId)}
+                    >
+                      Remove from Cart
+                    </Button>
+                  </Card>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
     </>
